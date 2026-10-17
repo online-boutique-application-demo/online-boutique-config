@@ -1,0 +1,51 @@
+## =============================================================================
+## Argo CD Helm Chart Values (Dev Environment)
+## Chart: argo/argo-cd
+## =============================================================================
+
+global:
+  domain: ""
+
+## Server configuration
+server:
+  service:
+    type: LoadBalancer
+  replicas: 1
+  extraArgs:
+    - --insecure
+
+## Repository server
+repoServer:
+  replicas: 1
+
+## Application controller
+controller:
+  replicas: 1
+
+## ApplicationSet controller
+applicationSet:
+  replicas: 1
+
+## Notifications controller
+notifications:
+  enabled: false
+
+## Dex server (disabled for dev, enable in Stage 6 if SSO needed)
+dex:
+  enabled: false
+
+## In-cluster Redis (non-HA for dev environment)
+redis:
+  enabled: true
+
+redis-ha:
+  enabled: false
+
+## Argo CD core configuration
+configs:
+  params:
+    server.insecure: true
+
+  cm:
+    application.instanceLabelKey: argocd.argoproj.io/instance
+    timeout.reconciliation: 180s

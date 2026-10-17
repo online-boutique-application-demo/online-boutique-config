@@ -1,0 +1,12 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cartservice
+spec:
+  template:
+    spec:
+      containers:
+        - name: server
+          env:
+            - name: REDIS_ADDR
+              value: "online-boutique-staging.e9wc6a.ng.0001.apse1.cache.amazonaws.com:6379"

@@ -1,0 +1,32 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base/online-boutique
+
+images:
+  - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/adservice
+    newTag: latest
+  - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/cartservice
+    newTag: latest
+  - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/checkoutservice
+    newTag: latest
+  - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/currencyservice
+    newTag: latest
+  - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/emailservice
+    newTag: latest
+  - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/frontend
+    newTag: latest
+  - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/loadgenerator
+    newTag: latest
+  - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/paymentservice
+    newTag: latest
+  - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/productcatalogservice
+    newTag: latest
+  - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/recommendationservice
+    newTag: latest
+  - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/shippingservice
+    newTag: latest
+
+patches:
+  - path: patches/cartservice-redis.yaml

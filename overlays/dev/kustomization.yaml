@@ -20,7 +20,7 @@ images:
   - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/paymentservice
     newTag: latest
   - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/productcatalogservice
-    newTag: latest
+    newTag: sha-2be80fa
   - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/recommendationservice
     newTag: sha-2be80fa
   - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/shippingservice

@@ -14,7 +14,7 @@ images:
   - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/emailservice
     newTag: sha-2be80fa
   - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/frontend
-    newTag: latest
+    newTag: sha-2be80fa
   - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/loadgenerator
     newTag: latest
   - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/paymentservice

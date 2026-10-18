@@ -80,6 +80,9 @@ spec:
             value: "checkoutservice:5050"
           - name: AD_SERVICE_ADDR
             value: "adservice:9555"
+          # SHOPPING_ASSISTANT_SERVICE_ADDR must exist (frontend panics via mustMapEnv if missing).
+          # The service is NOT deployed on AWS (depends on Google Cloud APIs).
+          # ENABLE_ASSISTANT is NOT set -> defaults to false -> UI hides the assistant button.
           - name: SHOPPING_ASSISTANT_SERVICE_ADDR
             value: "shoppingassistantservice:80"
           # # ENV_PLATFORM: One of: local, gcp, aws, azure, onprem, alibaba

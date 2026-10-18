@@ -1,0 +1,9 @@
+auth:
+  strategy: anonymous
+server:
+  web_fqdn: ""
+external_services:
+  prometheus:
+    url: "http://prometheus-server.monitoring:80"
+  grafana:
+    url: "http://grafana.monitoring:80"

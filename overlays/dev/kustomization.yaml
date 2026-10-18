@@ -27,3 +27,4 @@ images:
     newTag: sha-2be80fa
 patches:
   - path: patches/cartservice-redis.yaml
+  - path: patches/frontend-service.yaml

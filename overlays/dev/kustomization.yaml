@@ -10,7 +10,7 @@ images:
   - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/checkoutservice
     newTag: latest
   - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/currencyservice
-    newTag: latest
+    newTag: sha-2be80fa
   - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/emailservice
     newTag: sha-2be80fa
   - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/frontend

@@ -20,7 +20,7 @@ spec:
           annotations:
             eks.amazonaws.com/role-arn: arn:aws:iam::798836978890:role/online-boutique-dev-aws-lb-controller
         region: ap-southeast-1
-        vpcId: vpc-0344e86661d81c489
+        vpcId: vpc-0d45fceb8cf9ac238
   destination:
     server: https://kubernetes.default.svc
     namespace: kube-system

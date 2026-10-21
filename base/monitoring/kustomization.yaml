@@ -6,6 +6,8 @@ namespace: monitoring
 resources:
   - namespace.yaml
   - prometheus-service.yaml
+  - alertmanager-service.yaml
+  - grafana-service.yaml
   - otel-collector-service.yaml
   - custom-alerts/online-boutique-alerts.yaml
   - grafana-dashboards/microservices-dashboard.yaml

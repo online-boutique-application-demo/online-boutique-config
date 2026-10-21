@@ -55,12 +55,6 @@ grafana:
       enabled: true
       searchNamespace: ALL
   additionalDataSources:
-    - name: Loki
-      type: loki
-      uid: loki
-      url: http://loki.monitoring:3100
-      access: proxy
-      isDefault: false
     - name: Tempo
       type: tempo
       uid: tempo

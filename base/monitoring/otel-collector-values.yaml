@@ -1,0 +1,47 @@
+image:
+  repository: otel/opentelemetry-collector-contrib
+
+mode: deployment
+
+replicaCount: 1
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+config:
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: "0.0.0.0:4317"
+        http:
+          endpoint: "0.0.0.0:4318"
+    zipkin:
+      endpoint: "0.0.0.0:9411"
+
+  processors:
+    batch:
+      timeout: 1s
+      send_batch_size: 256
+    memory_limiter:
+      check_interval: 1s
+      limit_percentage: 75
+      spike_limit_percentage: 20
+
+  exporters:
+    otlp:
+      endpoint: "tempo.monitoring:4317"
+      tls:
+        insecure: true
+
+  service:
+    pipelines:
+      traces:
+        receivers: [otlp, zipkin]
+        processors: [memory_limiter, batch]
+        exporters: [otlp]

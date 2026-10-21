@@ -1,0 +1,119 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-prometheus-stack
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    targetRevision: 92.11.0
+    helm:
+      values: |
+        alertmanager:
+          enabled: true
+          alertmanagerSpec:
+            resources:
+              requests:
+                cpu: 50m
+                memory: 100Mi
+              limits:
+                cpu: 200m
+                memory: 256Mi
+        prometheus:
+          prometheusSpec:
+            retention: 7d
+            resources:
+              requests:
+                cpu: 150m
+                memory: 400Mi
+              limits:
+                cpu: 500m
+                memory: 1Gi
+            storageSpec:
+              volumeClaimTemplate:
+                spec:
+                  storageClassName: gp2
+                  accessModes: ["ReadWriteOnce"]
+                  resources:
+                    requests:
+                      storage: 10Gi
+            podMonitorSelectorNilUsesHelmValues: false
+            serviceMonitorSelectorNilUsesHelmValues: false
+            additionalScrapeConfigs:
+              - job_name: 'envoy-stats'
+                metrics_path: /stats/prometheus
+                kubernetes_sd_configs:
+                  - role: pod
+                    namespaces:
+                      names:
+                        - online-boutique
+                        - istio-system
+                relabel_configs:
+                  - source_labels: [__meta_kubernetes_pod_container_name]
+                    action: keep
+                    regex: ".*istio-proxy.*"
+                  - source_labels: [__address__]
+                    action: replace
+                    regex: "([^:]+)(?::\\d+)?"
+                    replacement: "${1}:15090"
+                    target_label: __address__
+                  - action: labelmap
+                    regex: __meta_kubernetes_pod_label_(.+)
+                  - source_labels: [__meta_kubernetes_namespace]
+                    action: replace
+                    target_label: namespace
+                  - source_labels: [__meta_kubernetes_pod_name]
+                    action: replace
+                    target_label: pod
+        grafana:
+          enabled: true
+          adminPassword: admin
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 300m
+              memory: 384Mi
+          sidecar:
+            dashboards:
+              enabled: true
+              label: grafana_dashboard
+              searchNamespace: ALL
+            datasources:
+              enabled: true
+              label: grafana_datasource
+              searchNamespace: ALL
+          additionalDataSources:
+            - name: Loki
+              type: loki
+              access: proxy
+              url: http://loki.monitoring:3100
+              isDefault: false
+              jsonData:
+                maxLines: 1000
+            - name: Tempo
+              type: tempo
+              access: proxy
+              url: http://tempo.monitoring:3200
+              isDefault: false
+              jsonData:
+                httpMethod: GET
+                tracesToLogsV2:
+                  datasourceUid: 'loki'
+                  filterByTraceId: true
+                  filterBySpanId: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

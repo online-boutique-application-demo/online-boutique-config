@@ -1,0 +1,76 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: online-boutique-alerts
+  namespace: monitoring
+  labels:
+    role: alert-rules
+    release: kube-prometheus-stack
+    app: online-boutique
+spec:
+  groups:
+    - name: online-boutique.rules
+      rules:
+        - alert: OnlineBoutiquePodCrashLooping
+          expr: rate(kube_pod_container_status_restarts_total{namespace="online-boutique"}[15m]) * 60 > 1 or kube_pod_container_status_waiting_reason{namespace="online-boutique",reason="CrashLoopBackOff"} == 1
+          for: 2m
+          labels:
+            severity: critical
+            tier: microservices
+          annotations:
+            summary: "Pod {{ $labels.pod }} is crash looping"
+            description: "Pod {{ $labels.pod }} in container {{ $labels.container }} (namespace {{ $labels.namespace }}) has restarted multiple times or is currently in CrashLoopBackOff."
+
+        - alert: OnlineBoutiqueHighErrorRate
+          expr: |
+            (
+              sum by (destination_workload) (rate(istio_requests_total{reporter="destination",destination_workload_namespace="online-boutique",response_code=~"5.*"}[5m]))
+              /
+              sum by (destination_workload) (rate(istio_requests_total{reporter="destination",destination_workload_namespace="online-boutique"}[5m]))
+            ) * 100 > 5
+          for: 3m
+          labels:
+            severity: warning
+            tier: microservices
+          annotations:
+            summary: "High HTTP 5xx error rate for {{ $labels.destination_workload }}"
+            description: "Service {{ $labels.destination_workload }} has an HTTP 5xx error rate higher than 5% over the last 5 minutes (currently {{ $value | printf \"%.2f\" }}%)."
+
+        - alert: OnlineBoutiqueHighLatency
+          expr: |
+            histogram_quantile(0.95, sum by (le, destination_workload) (rate(istio_request_duration_milliseconds_bucket{reporter="destination",destination_workload_namespace="online-boutique"}[5m]))) > 1000
+          for: 5m
+          labels:
+            severity: warning
+            tier: microservices
+          annotations:
+            summary: "High latency on {{ $labels.destination_workload }}"
+            description: "Service {{ $labels.destination_workload }} 95th percentile request latency is above 1000ms (currently {{ $value | printf \"%.2f\" }}ms)."
+
+        - alert: OnlineBoutiqueContainerMemoryHigh
+          expr: |
+            (
+              container_memory_working_set_bytes{namespace="online-boutique",container!="",container!="POD"}
+              /
+              container_spec_memory_limit_bytes{namespace="online-boutique",container!="",container!="POD"}
+            ) * 100 > 85
+          for: 5m
+          labels:
+            severity: warning
+            tier: infrastructure
+          annotations:
+            summary: "High memory usage for container {{ $labels.container }} in pod {{ $labels.pod }}"
+            description: "Memory usage of container {{ $labels.container }} in pod {{ $labels.pod }} exceeds 85% of limit (current: {{ $value | printf \"%.2f\" }}%)."
+
+        - alert: OnlineBoutiqueServiceReplicasUnavailable
+          expr: |
+            kube_deployment_status_replicas_available{namespace="online-boutique"}
+            <
+            kube_deployment_spec_replicas{namespace="online-boutique"}
+          for: 5m
+          labels:
+            severity: critical
+            tier: microservices
+          annotations:
+            summary: "Deployment {{ $labels.deployment }} has unavailable replicas"
+            description: "Deployment {{ $labels.deployment }} in online-boutique has fewer available replicas than expected for more than 5 minutes."

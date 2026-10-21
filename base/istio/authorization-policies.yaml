@@ -1,0 +1,183 @@
+# Deny all by default in online-boutique namespace
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: deny-all
+  namespace: online-boutique
+spec: {}
+---
+# Allow frontend to receive traffic from Istio Ingress Gateway and LoadGenerator
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-frontend
+  namespace: online-boutique
+spec:
+  selector:
+    matchLabels:
+      app: frontend
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account"
+              - "cluster.local/ns/online-boutique/sa/loadgenerator"
+---
+# Allow cartservice to receive traffic from frontend and checkoutservice
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-cartservice
+  namespace: online-boutique
+spec:
+  selector:
+    matchLabels:
+      app: cartservice
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/online-boutique/sa/frontend"
+              - "cluster.local/ns/online-boutique/sa/checkoutservice"
+---
+# Allow productcatalogservice to receive traffic from frontend, checkoutservice, and recommendationservice
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-productcatalogservice
+  namespace: online-boutique
+spec:
+  selector:
+    matchLabels:
+      app: productcatalogservice
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/online-boutique/sa/frontend"
+              - "cluster.local/ns/online-boutique/sa/checkoutservice"
+              - "cluster.local/ns/online-boutique/sa/recommendationservice"
+---
+# Allow currencyservice to receive traffic from frontend and checkoutservice
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-currencyservice
+  namespace: online-boutique
+spec:
+  selector:
+    matchLabels:
+      app: currencyservice
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/online-boutique/sa/frontend"
+              - "cluster.local/ns/online-boutique/sa/checkoutservice"
+---
+# Allow paymentservice to receive traffic from checkoutservice
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-paymentservice
+  namespace: online-boutique
+spec:
+  selector:
+    matchLabels:
+      app: paymentservice
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/online-boutique/sa/checkoutservice"
+---
+# Allow shippingservice to receive traffic from frontend and checkoutservice
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-shippingservice
+  namespace: online-boutique
+spec:
+  selector:
+    matchLabels:
+      app: shippingservice
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/online-boutique/sa/frontend"
+              - "cluster.local/ns/online-boutique/sa/checkoutservice"
+---
+# Allow emailservice to receive traffic from checkoutservice
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-emailservice
+  namespace: online-boutique
+spec:
+  selector:
+    matchLabels:
+      app: emailservice
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/online-boutique/sa/checkoutservice"
+---
+# Allow checkoutservice to receive traffic from frontend
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-checkoutservice
+  namespace: online-boutique
+spec:
+  selector:
+    matchLabels:
+      app: checkoutservice
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/online-boutique/sa/frontend"
+---
+# Allow recommendationservice to receive traffic from frontend
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-recommendationservice
+  namespace: online-boutique
+spec:
+  selector:
+    matchLabels:
+      app: recommendationservice
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/online-boutique/sa/frontend"
+---
+# Allow adservice to receive traffic from frontend
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-adservice
+  namespace: online-boutique
+spec:
+  selector:
+    matchLabels:
+      app: adservice
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/online-boutique/sa/frontend"

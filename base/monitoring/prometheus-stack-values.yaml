@@ -58,7 +58,7 @@ grafana:
     - name: Tempo
       type: tempo
       uid: tempo
-      url: http://tempo.monitoring:3200
+      url: http://tempo.monitoring:3100
       access: proxy
       isDefault: false
 

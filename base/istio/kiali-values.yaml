@@ -6,4 +6,12 @@ external_services:
   prometheus:
     url: "http://prometheus-server.monitoring:80"
   grafana:
-    url: "http://grafana.monitoring:80"
+    enabled: true
+    internal_url: "http://grafana.monitoring:80"
+    external_url: "http://localhost:3000"
+    in_cluster_url: "http://grafana.monitoring:80"
+    url: "http://localhost:3000"
+    dashboards:
+      - name: "Online Boutique - Microservices Overview"
+      - name: "Online Boutique - Istio Service Mesh"
+      - name: "Online Boutique - Pod Resources"

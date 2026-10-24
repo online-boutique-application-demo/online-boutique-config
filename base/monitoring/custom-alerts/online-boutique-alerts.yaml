@@ -74,3 +74,29 @@ spec:
           annotations:
             summary: "Deployment {{ $labels.deployment }} has unavailable replicas"
             description: "Deployment {{ $labels.deployment }} in online-boutique has fewer available replicas than expected for more than 5 minutes."
+
+        - alert: OnlineBoutiqueHighCPUUsage
+          expr: |
+            (
+              rate(container_cpu_usage_seconds_total{namespace="online-boutique",container!="",container!="POD"}[5m])
+              /
+              container_spec_cpu_quota{namespace="online-boutique",container!="",container!="POD"}
+              * container_spec_cpu_period{namespace="online-boutique",container!="",container!="POD"}
+            ) * 100 > 80
+          for: 5m
+          labels:
+            severity: warning
+            tier: infrastructure
+          annotations:
+            summary: "High CPU usage for container {{ $labels.container }} in pod {{ $labels.pod }}"
+            description: "CPU usage of container {{ $labels.container }} in pod {{ $labels.pod }} exceeds 80% of limit (current: {{ $value | printf \"%.2f\" }}%)."
+
+        - alert: SpotInstanceInterruption
+          expr: kube_node_spec_taint{key="aws-node-termination-handler/spot-itn",effect="NoSchedule"} == 1
+          for: 0m
+          labels:
+            severity: warning
+            tier: infrastructure
+          annotations:
+            summary: "Spot instance {{ $labels.node }} is being interrupted"
+            description: "AWS Spot instance {{ $labels.node }} has received an interruption notice. Pods on this node will be drained. Monitor for service disruptions."

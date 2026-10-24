@@ -9,7 +9,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/online-boutique-application-demo/online-boutique-config.git
-    targetRevision: feature/stage-5-monitoring
+    targetRevision: main
     path: base/monitoring
   destination:
     server: https://kubernetes.default.svc

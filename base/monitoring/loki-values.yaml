@@ -1,0 +1,32 @@
+loki:
+  enabled: true
+  isDefault: false
+  persistence:
+    enabled: true
+    storageClassName: gp2
+    size: 10Gi
+  config:
+    limits_config:
+      retention_period: 168h
+    table_manager:
+      retention_deletes_enabled: true
+      retention_period: 168h
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 300m
+      memory: 512Mi
+
+promtail:
+  enabled: true
+  config:
+    lokiAddress: http://loki:3100/loki/api/v1/push
+  resources:
+    requests:
+      cpu: 30m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi

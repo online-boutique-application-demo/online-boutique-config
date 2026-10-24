@@ -1,0 +1,129 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-istio
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+    app.kubernetes.io/part-of: online-boutique-monitoring
+data:
+  online-boutique-istio.json: |-
+    {
+      "annotations": { "list": [] },
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 1,
+      "id": null,
+      "links": [],
+      "liveNow": false,
+      "panels": [
+        {
+          "collapsed": false,
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+          "id": 1,
+          "title": "Istio Mesh & Ingress Gateway Traffic",
+          "type": "row"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "palette-classic" },
+              "unit": "reqps"
+            }
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 1 },
+          "id": 2,
+          "options": { "legend": { "displayMode": "table", "placement": "bottom" } },
+          "title": "Ingress Gateway Total Requests (req/s)",
+          "type": "timeseries",
+          "targets": [
+            {
+              "datasource": { "type": "prometheus", "uid": "prometheus" },
+              "expr": "sum by (response_code) (rate(istio_requests_total{reporter=\"source\",source_workload=\"istio-ingressgateway\"}[2m]))",
+              "legendFormat": "HTTP {{response_code}}"
+            }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "palette-classic" },
+              "unit": "reqps"
+            }
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 1 },
+          "id": 3,
+          "options": { "legend": { "displayMode": "table", "placement": "bottom" } },
+          "title": "Inter-Service Traffic Rate (Source to Destination)",
+          "type": "timeseries",
+          "targets": [
+            {
+              "datasource": { "type": "prometheus", "uid": "prometheus" },
+              "expr": "sum by (source_workload, destination_workload) (rate(istio_requests_total{reporter=\"destination\",destination_workload_namespace=\"online-boutique\"}[2m]))",
+              "legendFormat": "{{source_workload}} -> {{destination_workload}}"
+            }
+          ]
+        },
+        {
+          "collapsed": false,
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 9 },
+          "id": 4,
+          "title": "mTLS Security & Envoy Health",
+          "type": "row"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "palette-classic" },
+              "unit": "short"
+            }
+          },
+          "gridPos": { "h": 7, "w": 12, "x": 0, "y": 10 },
+          "id": 5,
+          "options": { "legend": { "displayMode": "table", "placement": "bottom" } },
+          "title": "Active TCP Connections in Mesh",
+          "type": "timeseries",
+          "targets": [
+            {
+              "datasource": { "type": "prometheus", "uid": "prometheus" },
+              "expr": "sum by (destination_workload) (istio_tcp_connections_opened_total{destination_workload_namespace=\"online-boutique\"} - istio_tcp_connections_closed_total{destination_workload_namespace=\"online-boutique\"})",
+              "legendFormat": "{{destination_workload}}"
+            }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "palette-classic" },
+              "unit": "short"
+            }
+          },
+          "gridPos": { "h": 7, "w": 12, "x": 12, "y": 10 },
+          "id": 6,
+          "options": { "legend": { "displayMode": "table", "placement": "bottom" } },
+          "title": "Envoy Sidecar Memory Usage (MB)",
+          "type": "timeseries",
+          "targets": [
+            {
+              "datasource": { "type": "prometheus", "uid": "prometheus" },
+              "expr": "sum by (pod) (container_memory_working_set_bytes{namespace=\"online-boutique\",container=\"istio-proxy\"}) / 1024 / 1024",
+              "legendFormat": "{{pod}}"
+            }
+          ]
+        }
+      ],
+      "refresh": "10s",
+      "schemaVersion": 38,
+      "style": "dark",
+      "tags": ["online-boutique", "istio", "mesh"],
+      "time": { "from": "now-30m", "to": "now" },
+      "timepicker": {},
+      "timezone": "browser",
+      "title": "Online Boutique - Istio Service Mesh",
+      "uid": "online-boutique-istio",
+      "version": 1
+    }

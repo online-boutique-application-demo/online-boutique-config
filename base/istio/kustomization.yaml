@@ -10,3 +10,4 @@ resources:
   - destination-rules.yaml
   - telemetry.yaml
   - istio-mesh-configmap.yaml
+  - otel-collector-destination-rule.yaml

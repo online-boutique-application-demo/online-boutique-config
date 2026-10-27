@@ -7,9 +7,6 @@ data:
   mesh: |-
     defaultConfig:
       discoveryAddress: istiod.istio-system.svc:15012
-      tracing:
-        zipkin:
-          address: otel-collector.monitoring.svc.cluster.local:9411
     defaultProviders:
       metrics:
       - prometheus

@@ -2,9 +2,11 @@ apiVersion: networking.istio.io/v1
 kind: DestinationRule
 metadata:
   name: otel-collector-disable-mtls
-  namespace: online-boutique
+  namespace: istio-system
 spec:
   host: otel-collector.monitoring.svc.cluster.local
+  exportTo:
+    - "*"
   trafficPolicy:
     tls:
       mode: DISABLE
@@ -13,9 +15,11 @@ apiVersion: networking.istio.io/v1
 kind: DestinationRule
 metadata:
   name: otel-collector-opentelemetry-disable-mtls
-  namespace: online-boutique
+  namespace: istio-system
 spec:
   host: otel-collector-opentelemetry-collector.monitoring.svc.cluster.local
+  exportTo:
+    - "*"
   trafficPolicy:
     tls:
       mode: DISABLE
@@ -24,9 +28,11 @@ apiVersion: networking.istio.io/v1
 kind: DestinationRule
 metadata:
   name: tempo-disable-mtls
-  namespace: online-boutique
+  namespace: istio-system
 spec:
   host: tempo.monitoring.svc.cluster.local
+  exportTo:
+    - "*"
   trafficPolicy:
     tls:
       mode: DISABLE

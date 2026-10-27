@@ -13,8 +13,15 @@ data:
     defaultProviders:
       metrics:
       - prometheus
+      tracing:
+      - otel-tracing
     enablePrometheusMerge: true
     enableTracing: true
+    extensionProviders:
+    - name: otel-tracing
+      opentelemetry:
+        port: 4317
+        service: otel-collector.monitoring.svc.cluster.local
     rootNamespace: istio-system
     trustDomain: cluster.local
   meshNetworks: 'networks: {}'

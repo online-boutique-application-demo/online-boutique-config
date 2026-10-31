@@ -8,18 +8,21 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - name: otlp-grpc
+    - name: grpc-otlp
       port: 4317
       targetPort: 4317
       protocol: TCP
-    - name: otlp-http
+      appProtocol: grpc
+    - name: http-otlp
       port: 4318
       targetPort: 4318
       protocol: TCP
-    - name: zipkin
+      appProtocol: http
+    - name: http-zipkin
       port: 9411
       targetPort: 9411
       protocol: TCP
+      appProtocol: http
   selector:
     app.kubernetes.io/instance: otel-collector
     app.kubernetes.io/name: opentelemetry-collector

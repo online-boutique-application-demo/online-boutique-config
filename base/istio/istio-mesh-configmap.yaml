@@ -7,14 +7,18 @@ data:
   mesh: |-
     defaultConfig:
       discoveryAddress: istiod.istio-system.svc:15012
-      tracing:
-        zipkin:
-          address: otel-collector.monitoring.svc.cluster.local:9411
     defaultProviders:
       metrics:
       - prometheus
+      tracing:
+      - otel-tracing
     enablePrometheusMerge: true
     enableTracing: true
+    extensionProviders:
+    - name: otel-tracing
+      opentelemetry:
+        port: 4317
+        service: otel-collector.monitoring.svc.cluster.local
     rootNamespace: istio-system
     trustDomain: cluster.local
   meshNetworks: 'networks: {}'

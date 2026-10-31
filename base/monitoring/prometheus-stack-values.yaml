@@ -42,6 +42,10 @@ alertmanager:
 grafana:
   enabled: true
   adminPassword: "admin"
+  grafana.ini:
+    auth.anonymous:
+      enabled: true
+      org_role: Viewer
   service:
     type: ClusterIP
     port: 80

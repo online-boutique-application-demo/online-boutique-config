@@ -1,0 +1,33 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: verify-image-signatures
+  annotations:
+    policies.kyverno.io/title: Verify Image Signatures
+    policies.kyverno.io/category: Supply Chain Security
+    policies.kyverno.io/severity: high
+    policies.kyverno.io/description: >-
+      Verify that container images from ECR are signed with Cosign
+      using keyless signing via GitHub Actions OIDC.
+spec:
+  validationFailureAction: Audit
+  background: true
+  rules:
+    - name: verify-cosign-signature
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - online-boutique
+      verifyImages:
+        - imageReferences:
+            - "798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/*"
+          attestors:
+            - entries:
+                - keyless:
+                    subject: "https://github.com/online-boutique-application-demo/*"
+                    issuer: "https://token.actions.githubusercontent.com"
+                    rekor:
+                      url: https://rekor.sigstore.dev

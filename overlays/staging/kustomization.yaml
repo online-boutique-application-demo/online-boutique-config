@@ -5,27 +5,27 @@ resources:
   - ../../base/online-boutique
 
 images:
-  - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/adservice
+  - name: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/online-boutique/adservice
     newTag: latest
-  - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/cartservice
+  - name: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/online-boutique/cartservice
     newTag: latest
-  - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/checkoutservice
+  - name: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/online-boutique/checkoutservice
     newTag: latest
-  - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/currencyservice
+  - name: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/online-boutique/currencyservice
     newTag: latest
-  - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/emailservice
+  - name: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/online-boutique/emailservice
     newTag: latest
-  - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/frontend
+  - name: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/online-boutique/frontend
     newTag: latest
-  - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/loadgenerator
+  - name: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/online-boutique/loadgenerator
     newTag: latest
-  - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/paymentservice
+  - name: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/online-boutique/paymentservice
     newTag: latest
-  - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/productcatalogservice
+  - name: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/online-boutique/productcatalogservice
     newTag: latest
-  - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/recommendationservice
+  - name: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/online-boutique/recommendationservice
     newTag: latest
-  - name: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/shippingservice
+  - name: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/online-boutique/shippingservice
     newTag: latest
 
 patches:

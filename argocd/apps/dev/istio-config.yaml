@@ -8,7 +8,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/online-boutique-application-demo/online-boutique-config.git
+    repoURL: https://github.com/<GITHUB_ORG>/online-boutique-config.git
     targetRevision: main
     path: base/istio
   destination:

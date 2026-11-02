@@ -23,11 +23,11 @@ spec:
                 - online-boutique
       verifyImages:
         - imageReferences:
-            - "798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/*"
+            - "<AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/online-boutique/*"
           attestors:
             - entries:
                 - keyless:
-                    subject: "https://github.com/online-boutique-application-demo/*"
+                    subject: "https://github.com/<GITHUB_ORG>/*"
                     issuer: "https://token.actions.githubusercontent.com"
                     rekor:
                       url: https://rekor.sigstore.dev

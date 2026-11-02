@@ -41,7 +41,7 @@ alertmanager:
 
 grafana:
   enabled: true
-  adminPassword: "admin"
+  adminPassword: <GRAFANA_ADMIN_PASSWORD>
   grafana.ini:
     auth.anonymous:
       enabled: true

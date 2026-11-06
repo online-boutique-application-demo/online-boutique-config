@@ -8,8 +8,8 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/online-boutique-application-demo/online-boutique-config.git
-    targetRevision: main
+    repoURL: https://github.com/${GITHUB_ORG}/online-boutique-config.git
+    targetRevision: ${CONFIG_REVISION}
     path: overlays/staging
   destination:
     server: https://kubernetes.default.svc

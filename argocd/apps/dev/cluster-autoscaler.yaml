@@ -14,14 +14,14 @@ spec:
     helm:
       values: |
         autoDiscovery:
-          clusterName: online-boutique-dev
-        awsRegion: ap-southeast-1
+          clusterName: ${EKS_CLUSTER_NAME}
+        awsRegion: ${AWS_REGION}
         rbac:
           serviceAccount:
             create: true
             name: cluster-autoscaler
             annotations:
-              eks.amazonaws.com/role-arn: arn:aws:iam::798836978890:role/online-boutique-dev-cluster-autoscaler
+              eks.amazonaws.com/role-arn: arn:aws:iam::${AWS_ACCOUNT_ID}:role/online-boutique-dev-cluster-autoscaler
   destination:
     server: https://kubernetes.default.svc
     namespace: kube-system

@@ -43,7 +43,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: 798836978890.dkr.ecr.ap-southeast-1.amazonaws.com/online-boutique/productcatalogservice
+        image: REGISTRY/online-boutique/productcatalogservice:latest
         ports:
         - containerPort: 3550
         env:

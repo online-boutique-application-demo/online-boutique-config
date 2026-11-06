@@ -18,7 +18,7 @@ spec:
           create: true
           name: aws-load-balancer-controller
           annotations:
-            eks.amazonaws.com/role-arn: arn:aws:iam://${AWS_ACCOUNT_ID}:role/online-boutique-dev-aws-lb-controller
+            eks.amazonaws.com/role-arn: arn:aws:iam::${AWS_ACCOUNT_ID}:role/online-boutique-dev-aws-lb-controller
         region: ${AWS_REGION}
   destination:
     server: https://kubernetes.default.svc

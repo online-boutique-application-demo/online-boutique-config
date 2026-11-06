@@ -15,27 +15,27 @@ configMapGenerator:
 
 images:
   - name: REGISTRY/online-boutique/adservice
-    newTag: latest
+    newTag: sha-32edbf4
   - name: REGISTRY/online-boutique/cartservice
-    newTag: latest
+    newTag: sha-32edbf4
   - name: REGISTRY/online-boutique/checkoutservice
-    newTag: latest
+    newTag: sha-32edbf4
   - name: REGISTRY/online-boutique/currencyservice
-    newTag: latest
+    newTag: sha-32edbf4
   - name: REGISTRY/online-boutique/emailservice
-    newTag: latest
+    newTag: sha-32edbf4
   - name: REGISTRY/online-boutique/frontend
-    newTag: latest
+    newTag: sha-32edbf4
   - name: REGISTRY/online-boutique/loadgenerator
-    newTag: latest
+    newTag: sha-32edbf4
   - name: REGISTRY/online-boutique/paymentservice
-    newTag: latest
+    newTag: sha-32edbf4
   - name: REGISTRY/online-boutique/productcatalogservice
-    newTag: latest
+    newTag: sha-32edbf4
   - name: REGISTRY/online-boutique/recommendationservice
-    newTag: latest
+    newTag: sha-32edbf4
   - name: REGISTRY/online-boutique/shippingservice
-    newTag: latest
+    newTag: sha-32edbf4
 
 replacements:
   - source:

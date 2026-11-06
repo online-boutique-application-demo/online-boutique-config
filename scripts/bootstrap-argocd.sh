@@ -58,24 +58,7 @@ fi
 # Default variables
 export EKS_CLUSTER_NAME="${EKS_CLUSTER_NAME:-online-boutique-${TARGET_ENV}}"
 export CONFIG_REVISION="${CONFIG_REVISION:-deploy/${TARGET_ENV}}"
-
-# Grafana Admin Password
-if [ -z "${GRAFANA_ADMIN_PASSWORD:-}" ]; then
-  if [ -t 0 ]; then
-    read -rsp "Enter Grafana Admin Password: " GRAFANA_ADMIN_PASSWORD
-    echo
-  else
-    echo "Error: GRAFANA_ADMIN_PASSWORD is required in non-interactive mode" >&2
-    exit 1
-  fi
-fi
-
-if [ -z "${GRAFANA_ADMIN_PASSWORD:-}" ]; then
-  echo "Error: GRAFANA_ADMIN_PASSWORD cannot be empty" >&2
-  exit 1
-fi
-
-export GITHUB_ORG AWS_ACCOUNT_ID AWS_REGION EKS_CLUSTER_NAME CONFIG_REVISION GRAFANA_ADMIN_PASSWORD
+export GITHUB_ORG AWS_ACCOUNT_ID AWS_REGION EKS_CLUSTER_NAME CONFIG_REVISION
 
 # Detect kubectl binary
 if command -v kubectl >/dev/null 2>&1; then
@@ -87,23 +70,41 @@ else
   exit 1
 fi
 
-if [ "$DRY_RUN" = true ]; then
-  echo "# --- Namespace: monitoring ---"
-  "$KUBECTL" create namespace monitoring --dry-run=client -o yaml
-  echo "---"
-  echo "# --- Secret: grafana-admin ---"
-  "$KUBECTL" create secret generic grafana-admin \
-    --namespace monitoring \
-    --from-literal=admin-user=admin \
-    --from-literal=admin-password=REDACTED \
-    --dry-run=client -o yaml
-else
-  "$KUBECTL" create namespace monitoring --dry-run=client -o yaml | "$KUBECTL" apply -f -
-  "$KUBECTL" create secret generic grafana-admin \
-    --namespace monitoring \
-    --from-literal=admin-user=admin \
-    --from-literal="admin-password=${GRAFANA_ADMIN_PASSWORD}" \
-    --dry-run=client -o yaml | "$KUBECTL" apply -f -
+# Namespace & Secret logic (monitoring / grafana-admin)
+if [ -f "${APPS_DIR}/kube-prometheus-stack.yaml" ]; then
+  if [ "$DRY_RUN" = true ]; then
+    echo "# --- Namespace: monitoring ---"
+    "$KUBECTL" create namespace monitoring --dry-run=client -o yaml
+    echo "---"
+    echo "# --- Secret: grafana-admin ---"
+    "$KUBECTL" create secret generic grafana-admin \
+      --namespace monitoring \
+      --from-literal=admin-user=admin \
+      --from-literal=admin-password=REDACTED \
+      --dry-run=client -o yaml
+  else
+    if [ -z "${GRAFANA_ADMIN_PASSWORD:-}" ]; then
+      if [ -t 0 ]; then
+        read -rsp "Enter Grafana Admin Password: " GRAFANA_ADMIN_PASSWORD
+        echo
+      else
+        echo "Error: GRAFANA_ADMIN_PASSWORD is required in non-interactive mode" >&2
+        exit 1
+      fi
+    fi
+
+    if [ -z "${GRAFANA_ADMIN_PASSWORD:-}" ]; then
+      echo "Error: GRAFANA_ADMIN_PASSWORD cannot be empty" >&2
+      exit 1
+    fi
+
+    "$KUBECTL" create namespace monitoring --dry-run=client -o yaml | "$KUBECTL" apply -f -
+    "$KUBECTL" create secret generic grafana-admin \
+      --namespace monitoring \
+      --from-literal=admin-user=admin \
+      --from-literal="admin-password=${GRAFANA_ADMIN_PASSWORD}" \
+      --dry-run=client -o yaml | "$KUBECTL" apply -f -
+  fi
 fi
 
 ENVSUBST_VARS='$GITHUB_ORG $AWS_ACCOUNT_ID $AWS_REGION $EKS_CLUSTER_NAME $CONFIG_REVISION'

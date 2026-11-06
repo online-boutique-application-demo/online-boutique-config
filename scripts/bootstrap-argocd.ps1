@@ -40,34 +40,36 @@ if ([string]::IsNullOrWhiteSpace($AwsRegion)) {
 $ClusterName = if ($env:EKS_CLUSTER_NAME) { $env:EKS_CLUSTER_NAME } else { "online-boutique-$Env" }
 $ConfigRevision = if ($env:CONFIG_REVISION) { $env:CONFIG_REVISION } else { "deploy/$Env" }
 
-# Handle Grafana admin password
-$GrafanaPassword = $env:GRAFANA_ADMIN_PASSWORD
-if ([string]::IsNullOrWhiteSpace($GrafanaPassword)) {
-    if ([Environment]::UserInteractive) {
-        $secPass = Read-Host -Prompt "Enter Grafana Admin Password" -AsSecureString
-        $BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($secPass)
-        $GrafanaPassword = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
+# Handle Grafana admin password & Namespace/Secret logic
+$hasMonitoring = Test-Path (Join-Path $AppsDir "kube-prometheus-stack.yaml")
+if ($hasMonitoring) {
+    if ($DryRun) {
+        Write-Output "# --- Namespace: monitoring ---"
+        kubectl create namespace monitoring --dry-run=client -o yaml
+        Write-Output "---"
+        Write-Output "# --- Secret: grafana-admin ---"
+        kubectl create secret generic grafana-admin --namespace monitoring --from-literal="admin-user=admin" --from-literal="admin-password=REDACTED" --dry-run=client -o yaml
     } else {
-        Write-Error "Required environment variable GRAFANA_ADMIN_PASSWORD is not set in non-interactive mode"
-        exit 1
+        $GrafanaPassword = $env:GRAFANA_ADMIN_PASSWORD
+        if ([string]::IsNullOrWhiteSpace($GrafanaPassword)) {
+            if ([Environment]::UserInteractive) {
+                $secPass = Read-Host -Prompt "Enter Grafana Admin Password" -AsSecureString
+                $BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($secPass)
+                $GrafanaPassword = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
+            } else {
+                Write-Error "Required environment variable GRAFANA_ADMIN_PASSWORD is not set in non-interactive mode"
+                exit 1
+            }
+        }
+
+        if ([string]::IsNullOrWhiteSpace($GrafanaPassword)) {
+            Write-Error "GRAFANA_ADMIN_PASSWORD cannot be empty"
+            exit 1
+        }
+
+        kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
+        kubectl create secret generic grafana-admin --namespace monitoring --from-literal="admin-user=admin" --from-literal="admin-password=$GrafanaPassword" --dry-run=client -o yaml | kubectl apply -f -
     }
-}
-
-if ([string]::IsNullOrWhiteSpace($GrafanaPassword)) {
-    Write-Error "GRAFANA_ADMIN_PASSWORD cannot be empty"
-    exit 1
-}
-
-# Namespace & Secret logic
-if ($DryRun) {
-    Write-Output "# --- Namespace: monitoring ---"
-    kubectl create namespace monitoring --dry-run=client -o yaml
-    Write-Output "---"
-    Write-Output "# --- Secret: grafana-admin ---"
-    kubectl create secret generic grafana-admin --namespace monitoring --from-literal="admin-user=admin" --from-literal="admin-password=REDACTED" --dry-run=client -o yaml
-} else {
-    kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
-    kubectl create secret generic grafana-admin --namespace monitoring --from-literal="admin-user=admin" --from-literal="admin-password=$GrafanaPassword" --dry-run=client -o yaml | kubectl apply -f -
 }
 
 # Render and apply manifests

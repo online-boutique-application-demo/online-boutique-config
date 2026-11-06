@@ -13,7 +13,7 @@ spec:
     path: overlays/staging
   destination:
     server: https://kubernetes.default.svc
-    namespace: online-boutique-staging
+    namespace: online-boutique
   syncPolicy:
     syncOptions:
       - CreateNamespace=true

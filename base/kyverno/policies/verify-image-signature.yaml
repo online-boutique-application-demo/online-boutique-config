@@ -24,6 +24,8 @@ spec:
       verifyImages:
         - imageReferences:
             - "*.dkr.ecr.*.amazonaws.com/online-boutique/*"
+          mutateDigest: false
+          verifyDigest: false
           attestors:
             - entries:
                 - keyless:

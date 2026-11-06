@@ -43,7 +43,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/online-boutique/paymentservice:latest
+        image: REGISTRY/online-boutique/paymentservice:latest
         ports:
         - containerPort: 50051
         env:

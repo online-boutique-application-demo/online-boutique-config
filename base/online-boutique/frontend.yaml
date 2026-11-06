@@ -44,7 +44,7 @@ spec:
                 - ALL
             privileged: false
             readOnlyRootFilesystem: true
-          image: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/online-boutique/frontend:latest
+          image: REGISTRY/online-boutique/frontend:latest
           ports:
           - containerPort: 8080
           readinessProbe:

@@ -43,7 +43,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/online-boutique/adservice:latest
+        image: REGISTRY/online-boutique/adservice:latest
         ports:
         - containerPort: 9555
         env:

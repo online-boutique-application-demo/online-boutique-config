@@ -23,11 +23,12 @@ spec:
                 - online-boutique
       verifyImages:
         - imageReferences:
-            - "<AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/online-boutique/*"
+            - "*.dkr.ecr.*.amazonaws.com/online-boutique/*"
           attestors:
             - entries:
                 - keyless:
-                    subject: "https://github.com/<GITHUB_ORG>/*"
+                    # Default placeholder; overridden via ArgoCD inline kustomize patch per environment
+                    subject: "https://github.com/GITHUB_ORG/*"
                     issuer: "https://token.actions.githubusercontent.com"
                     rekor:
                       url: https://rekor.sigstore.dev

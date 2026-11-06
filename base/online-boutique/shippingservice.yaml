@@ -42,7 +42,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/online-boutique/shippingservice:latest
+        image: REGISTRY/online-boutique/shippingservice:latest
         ports:
         - containerPort: 50051
         env:

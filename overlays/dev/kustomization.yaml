@@ -1,29 +1,62 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+
 resources:
   - ../../base/online-boutique
+
+configMapGenerator:
+  - name: env-config
+    envs:
+      - env.properties
+    options:
+      disableNameSuffixHash: true
+      annotations:
+        config.kubernetes.io/local-config: "true"
+
 images:
-  - name: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/online-boutique/adservice
+  - name: REGISTRY/online-boutique/adservice
     newTag: sha-32edbf4
-  - name: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/online-boutique/cartservice
+  - name: REGISTRY/online-boutique/cartservice
     newTag: sha-32edbf4
-  - name: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/online-boutique/checkoutservice
+  - name: REGISTRY/online-boutique/checkoutservice
     newTag: sha-32edbf4
-  - name: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/online-boutique/currencyservice
+  - name: REGISTRY/online-boutique/currencyservice
     newTag: sha-32edbf4
-  - name: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/online-boutique/emailservice
+  - name: REGISTRY/online-boutique/emailservice
     newTag: sha-32edbf4
-  - name: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/online-boutique/frontend
+  - name: REGISTRY/online-boutique/frontend
     newTag: sha-32edbf4
-  - name: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/online-boutique/loadgenerator
+  - name: REGISTRY/online-boutique/loadgenerator
     newTag: sha-32edbf4
-  - name: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/online-boutique/paymentservice
+  - name: REGISTRY/online-boutique/paymentservice
     newTag: sha-32edbf4
-  - name: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/online-boutique/productcatalogservice
+  - name: REGISTRY/online-boutique/productcatalogservice
     newTag: sha-32edbf4
-  - name: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/online-boutique/recommendationservice
+  - name: REGISTRY/online-boutique/recommendationservice
     newTag: sha-32edbf4
-  - name: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/online-boutique/shippingservice
+  - name: REGISTRY/online-boutique/shippingservice
     newTag: sha-32edbf4
-patches:
-  - path: patches/cartservice-redis.yaml
+
+replacements:
+  - source:
+      kind: ConfigMap
+      name: env-config
+      fieldPath: data.ECR_REGISTRY
+    targets:
+      - select:
+          kind: Deployment
+        fieldPaths:
+          - spec.template.spec.containers.*.image
+        options:
+          delimiter: '/'
+          index: 0
+  - source:
+      kind: ConfigMap
+      name: env-config
+      fieldPath: data.REDIS_ADDR
+    targets:
+      - select:
+          kind: Deployment
+          name: cartservice
+        fieldPaths:
+          - spec.template.spec.containers.[name=server].env.[name=REDIS_ADDR].value

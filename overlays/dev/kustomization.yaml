@@ -18,7 +18,7 @@ images:
   - name: REGISTRY/online-boutique/checkoutservice
     newTag: sha-32edbf4
   - name: REGISTRY/online-boutique/currencyservice
-    newTag: sha-32edbf4
+    newTag: sha-7c89632
   - name: REGISTRY/online-boutique/emailservice
     newTag: sha-7c89632
   - name: REGISTRY/online-boutique/frontend

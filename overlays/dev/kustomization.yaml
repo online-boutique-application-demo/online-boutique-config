@@ -24,7 +24,7 @@ images:
   - name: REGISTRY/online-boutique/frontend
     newTag: sha-32edbf4
   - name: REGISTRY/online-boutique/loadgenerator
-    newTag: sha-32edbf4
+    newTag: sha-7c89632
   - name: REGISTRY/online-boutique/paymentservice
     newTag: sha-32edbf4
   - name: REGISTRY/online-boutique/productcatalogservice
